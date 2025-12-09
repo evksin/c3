@@ -1,266 +1,384 @@
 <!DOCTYPE html>
 <html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Калькулятор</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+      :root {
+        --bg-gradient-start: #667eea;
+        --bg-gradient-end: #764ba2;
+        --calculator-bg: #ffffff;
+        --calculator-shadow: rgba(0, 0, 0, 0.3);
+        --display-bg: #1a1a1a;
+        --display-color: #ffffff;
+        --button-bg: #f0f0f0;
+        --button-hover-bg: #e0e0e0;
+        --button-color: #333;
+        --button-shadow: rgba(0, 0, 0, 0.2);
+        --operator-bg: #667eea;
+        --operator-hover-bg: #5568d3;
+        --equals-bg: #764ba2;
+        --equals-hover-bg: #653a8a;
+        --clear-bg: #ff6b6b;
+        --clear-hover-bg: #ee5a5a;
+      }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 20px;
-        }
+      body.dark-theme {
+        --bg-gradient-start: #1a1a2e;
+        --bg-gradient-end: #16213e;
+        --calculator-bg: #2d2d44;
+        --calculator-shadow: rgba(0, 0, 0, 0.5);
+        --display-bg: #1a1a1a;
+        --display-color: #ffffff;
+        --button-bg: #3d3d5c;
+        --button-hover-bg: #4d4d6c;
+        --button-color: #e0e0e0;
+        --button-shadow: rgba(0, 0, 0, 0.4);
+        --operator-bg: #667eea;
+        --operator-hover-bg: #5568d3;
+        --equals-bg: #764ba2;
+        --equals-hover-bg: #653a8a;
+        --clear-bg: #ff6b6b;
+        --clear-hover-bg: #ee5a5a;
+      }
 
-        .calculator {
-            background: #ffffff;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            padding: 30px;
-            max-width: 400px;
-            width: 100%;
-        }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-        .display {
-            background: #1a1a1a;
-            color: #ffffff;
-            font-size: 2.5rem;
-            padding: 20px;
-            text-align: right;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            min-height: 80px;
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            word-wrap: break-word;
-            overflow-wrap: break-word;
-        }
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background: linear-gradient(
+          135deg,
+          var(--bg-gradient-start) 0%,
+          var(--bg-gradient-end) 100%
+        );
+        padding: 20px;
+        transition: background 0.3s ease;
+      }
 
-        .buttons {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
-        }
+      .calculator {
+        background: var(--calculator-bg);
+        border-radius: 20px;
+        box-shadow: 0 20px 60px var(--calculator-shadow);
+        padding: 30px;
+        max-width: 400px;
+        width: 100%;
+        position: relative;
+        transition: background 0.3s ease, box-shadow 0.3s ease;
+      }
 
-        button {
-            background: #f0f0f0;
-            border: none;
-            border-radius: 10px;
-            font-size: 1.5rem;
-            padding: 20px;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-weight: 600;
-            color: #333;
-        }
+      .theme-toggle {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: var(--button-bg);
+        border: none;
+        border-radius: 50%;
+        width: 45px;
+        height: 45px;
+        font-size: 1.5rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        color: var(--button-color);
+        box-shadow: 0 2px 8px var(--button-shadow);
+      }
 
-        button:hover {
-            background: #e0e0e0;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
+      .theme-toggle:hover {
+        background: var(--button-hover-bg);
+        transform: scale(1.1);
+      }
 
-        button:active {
-            transform: translateY(0);
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-        }
+      .theme-toggle:active {
+        transform: scale(0.95);
+      }
 
-        .operator {
-            background: #667eea;
-            color: #ffffff;
-        }
+      .display {
+        background: var(--display-bg);
+        color: var(--display-color);
+        font-size: 2.5rem;
+        padding: 20px;
+        text-align: right;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        min-height: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        transition: background 0.3s ease, color 0.3s ease;
+      }
 
-        .operator:hover {
-            background: #5568d3;
-        }
+      .buttons {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 15px;
+      }
 
-        .equals {
-            background: #764ba2;
-            color: #ffffff;
-        }
+      button {
+        background: var(--button-bg);
+        border: none;
+        border-radius: 10px;
+        font-size: 1.5rem;
+        padding: 20px;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-weight: 600;
+        color: var(--button-color);
+      }
 
-        .equals:hover {
-            background: #653a8a;
-        }
+      button:hover {
+        background: var(--button-hover-bg);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px var(--button-shadow);
+      }
 
-        .clear {
-            background: #ff6b6b;
-            color: #ffffff;
-        }
+      button:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 5px var(--button-shadow);
+      }
 
-        .clear:hover {
-            background: #ee5a5a;
-        }
+      .operator {
+        background: var(--operator-bg);
+        color: #ffffff;
+      }
 
-        .zero {
-            grid-column: span 2;
-        }
+      .operator:hover {
+        background: var(--operator-hover-bg);
+      }
+
+      .equals {
+        background: var(--equals-bg);
+        color: #ffffff;
+      }
+
+      .equals:hover {
+        background: var(--equals-hover-bg);
+      }
+
+      .clear {
+        background: var(--clear-bg);
+        color: #ffffff;
+      }
+
+      .clear:hover {
+        background: var(--clear-hover-bg);
+      }
+
+      .zero {
+        grid-column: span 2;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="calculator">
-        <div class="display" id="display">0</div>
-        <div class="buttons">
-            <button class="clear" onclick="clearDisplay()">C</button>
-            <button class="operator" onclick="appendOperator('/')">/</button>
-            <button class="operator" onclick="appendOperator('*')">×</button>
-            <button class="operator" onclick="deleteLast()">⌫</button>
-            
-            <button onclick="appendNumber('7')">7</button>
-            <button onclick="appendNumber('8')">8</button>
-            <button onclick="appendNumber('9')">9</button>
-            <button class="operator" onclick="appendOperator('-')">-</button>
-            
-            <button onclick="appendNumber('4')">4</button>
-            <button onclick="appendNumber('5')">5</button>
-            <button onclick="appendNumber('6')">6</button>
-            <button class="operator" onclick="appendOperator('+')">+</button>
-            
-            <button onclick="appendNumber('1')">1</button>
-            <button onclick="appendNumber('2')">2</button>
-            <button onclick="appendNumber('3')">3</button>
-            <button class="equals" onclick="calculate()" rowspan="2">=</button>
-            
-            <button class="zero" onclick="appendNumber('0')">0</button>
-            <button onclick="appendDecimal()">.</button>
-        </div>
+      <button
+        class="theme-toggle"
+        id="themeToggle"
+        onclick="toggleTheme()"
+        title="Переключить тему"
+      >
+        🌙
+      </button>
+      <div class="display" id="display">0</div>
+      <div class="buttons">
+        <button class="clear" onclick="clearDisplay()">C</button>
+        <button class="operator" onclick="appendOperator('/')">/</button>
+        <button class="operator" onclick="appendOperator('*')">×</button>
+        <button class="operator" onclick="deleteLast()">⌫</button>
+
+        <button onclick="appendNumber('7')">7</button>
+        <button onclick="appendNumber('8')">8</button>
+        <button onclick="appendNumber('9')">9</button>
+        <button class="operator" onclick="appendOperator('-')">-</button>
+
+        <button onclick="appendNumber('4')">4</button>
+        <button onclick="appendNumber('5')">5</button>
+        <button onclick="appendNumber('6')">6</button>
+        <button class="operator" onclick="appendOperator('+')">+</button>
+
+        <button onclick="appendNumber('1')">1</button>
+        <button onclick="appendNumber('2')">2</button>
+        <button onclick="appendNumber('3')">3</button>
+        <button class="equals" onclick="calculate()" rowspan="2">=</button>
+
+        <button class="zero" onclick="appendNumber('0')">0</button>
+        <button onclick="appendDecimal()">.</button>
+      </div>
     </div>
 
     <script>
-        let display = document.getElementById('display');
-        let currentInput = '0';
-        let shouldResetDisplay = false;
+      // Инициализация темы
+      function initTheme() {
+        const savedTheme = localStorage.getItem("theme");
+        const prefersDark = window.matchMedia(
+          "(prefers-color-scheme: dark)"
+        ).matches;
 
-        function updateDisplay() {
-            display.textContent = currentInput;
+        if (savedTheme === "dark" || (!savedTheme && prefersDark)) {
+          document.body.classList.add("dark-theme");
+          document.getElementById("themeToggle").textContent = "☀️";
+        } else {
+          document.body.classList.remove("dark-theme");
+          document.getElementById("themeToggle").textContent = "🌙";
+        }
+      }
+
+      function toggleTheme() {
+        const body = document.body;
+        const themeToggle = document.getElementById("themeToggle");
+
+        body.classList.toggle("dark-theme");
+
+        if (body.classList.contains("dark-theme")) {
+          themeToggle.textContent = "☀️";
+          localStorage.setItem("theme", "dark");
+        } else {
+          themeToggle.textContent = "🌙";
+          localStorage.setItem("theme", "light");
+        }
+      }
+
+      // Инициализация при загрузке страницы
+      initTheme();
+
+      let display = document.getElementById("display");
+      let currentInput = "0";
+      let shouldResetDisplay = false;
+
+      function updateDisplay() {
+        display.textContent = currentInput;
+      }
+
+      function appendNumber(number) {
+        if (shouldResetDisplay) {
+          currentInput = "0";
+          shouldResetDisplay = false;
         }
 
-        function appendNumber(number) {
-            if (shouldResetDisplay) {
-                currentInput = '0';
-                shouldResetDisplay = false;
-            }
-            
-            if (currentInput === '0') {
-                currentInput = number;
-            } else {
-                currentInput += number;
-            }
+        if (currentInput === "0") {
+          currentInput = number;
+        } else {
+          currentInput += number;
+        }
+        updateDisplay();
+      }
+
+      function appendDecimal() {
+        if (shouldResetDisplay) {
+          currentInput = "0";
+          shouldResetDisplay = false;
+        }
+
+        if (!currentInput.includes(".")) {
+          currentInput += ".";
+          updateDisplay();
+        }
+      }
+
+      function appendOperator(operator) {
+        if (shouldResetDisplay) {
+          shouldResetDisplay = false;
+        }
+
+        const lastChar = currentInput[currentInput.length - 1];
+        if (["+", "-", "*", "/"].includes(lastChar)) {
+          currentInput = currentInput.slice(0, -1) + operator;
+        } else {
+          currentInput += operator;
+        }
+        updateDisplay();
+      }
+
+      function calculate() {
+        try {
+          // Заменяем × на * для вычисления
+          let expression = currentInput.replace(/×/g, "*");
+
+          // Проверяем на деление на ноль
+          if (expression.includes("/0") && !expression.includes("/0.")) {
+            currentInput = "Ошибка";
             updateDisplay();
+            shouldResetDisplay = true;
+            return;
+          }
+
+          const result = Function(
+            '"use strict"; return (' + expression + ")"
+          )();
+
+          if (isNaN(result) || !isFinite(result)) {
+            currentInput = "Ошибка";
+          } else {
+            currentInput = result.toString();
+          }
+
+          updateDisplay();
+          shouldResetDisplay = true;
+        } catch (error) {
+          currentInput = "Ошибка";
+          updateDisplay();
+          shouldResetDisplay = true;
+        }
+      }
+
+      function clearDisplay() {
+        currentInput = "0";
+        shouldResetDisplay = false;
+        updateDisplay();
+      }
+
+      function deleteLast() {
+        if (shouldResetDisplay) {
+          clearDisplay();
+          return;
         }
 
-        function appendDecimal() {
-            if (shouldResetDisplay) {
-                currentInput = '0';
-                shouldResetDisplay = false;
-            }
-            
-            if (!currentInput.includes('.')) {
-                currentInput += '.';
-                updateDisplay();
-            }
+        if (currentInput.length > 1) {
+          currentInput = currentInput.slice(0, -1);
+        } else {
+          currentInput = "0";
         }
+        updateDisplay();
+      }
 
-        function appendOperator(operator) {
-            if (shouldResetDisplay) {
-                shouldResetDisplay = false;
-            }
-            
-            const lastChar = currentInput[currentInput.length - 1];
-            if (['+', '-', '*', '/'].includes(lastChar)) {
-                currentInput = currentInput.slice(0, -1) + operator;
-            } else {
-                currentInput += operator;
-            }
-            updateDisplay();
+      // Поддержка клавиатуры
+      document.addEventListener("keydown", function (event) {
+        const key = event.key;
+
+        if (key >= "0" && key <= "9") {
+          appendNumber(key);
+        } else if (key === ".") {
+          appendDecimal();
+        } else if (key === "+") {
+          appendOperator("+");
+        } else if (key === "-") {
+          appendOperator("-");
+        } else if (key === "*") {
+          appendOperator("*");
+        } else if (key === "/") {
+          event.preventDefault();
+          appendOperator("/");
+        } else if (key === "Enter" || key === "=") {
+          event.preventDefault();
+          calculate();
+        } else if (key === "Escape" || key === "c" || key === "C") {
+          clearDisplay();
+        } else if (key === "Backspace") {
+          deleteLast();
         }
-
-        function calculate() {
-            try {
-                // Заменяем × на * для вычисления
-                let expression = currentInput.replace(/×/g, '*');
-                
-                // Проверяем на деление на ноль
-                if (expression.includes('/0') && !expression.includes('/0.')) {
-                    currentInput = 'Ошибка';
-                    updateDisplay();
-                    shouldResetDisplay = true;
-                    return;
-                }
-                
-                const result = Function('"use strict"; return (' + expression + ')')();
-                
-                if (isNaN(result) || !isFinite(result)) {
-                    currentInput = 'Ошибка';
-                } else {
-                    currentInput = result.toString();
-                }
-                
-                updateDisplay();
-                shouldResetDisplay = true;
-            } catch (error) {
-                currentInput = 'Ошибка';
-                updateDisplay();
-                shouldResetDisplay = true;
-            }
-        }
-
-        function clearDisplay() {
-            currentInput = '0';
-            shouldResetDisplay = false;
-            updateDisplay();
-        }
-
-        function deleteLast() {
-            if (shouldResetDisplay) {
-                clearDisplay();
-                return;
-            }
-            
-            if (currentInput.length > 1) {
-                currentInput = currentInput.slice(0, -1);
-            } else {
-                currentInput = '0';
-            }
-            updateDisplay();
-        }
-
-        // Поддержка клавиатуры
-        document.addEventListener('keydown', function(event) {
-            const key = event.key;
-            
-            if (key >= '0' && key <= '9') {
-                appendNumber(key);
-            } else if (key === '.') {
-                appendDecimal();
-            } else if (key === '+') {
-                appendOperator('+');
-            } else if (key === '-') {
-                appendOperator('-');
-            } else if (key === '*') {
-                appendOperator('*');
-            } else if (key === '/') {
-                event.preventDefault();
-                appendOperator('/');
-            } else if (key === 'Enter' || key === '=') {
-                event.preventDefault();
-                calculate();
-            } else if (key === 'Escape' || key === 'c' || key === 'C') {
-                clearDisplay();
-            } else if (key === 'Backspace') {
-                deleteLast();
-            }
-        });
+      });
     </script>
-</body>
+  </body>
 </html>
